@@ -1,0 +1,17 @@
+# Reference this view as dbt_f1_dev_marts__dim_constructors
+catalog: dbt_f1
+schema: dev_marts
+table_name: dim_constructors
+
+dimensions:
+  constructor_ref: {}
+  constructor_name: {}
+  nationality: {}
+  wikipedia_url: {}
+
+  constructor_id:
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count

@@ -1,0 +1,21 @@
+# Reference this view as dbt_f1_dev_staging__stg_f1__circuits
+catalog: dbt_f1
+schema: dev_staging
+table_name: stg_f1__circuits
+
+dimensions:
+  circuit_ref: {}
+  circuit_name: {}
+  location: {}
+  country: {}
+  latitude: {}
+  longitude: {}
+  altitude_metres: {}
+  wikipedia_url: {}
+
+  circuit_id:
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count

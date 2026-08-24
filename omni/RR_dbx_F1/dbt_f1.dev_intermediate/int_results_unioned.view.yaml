@@ -1,0 +1,39 @@
+# Reference this view as dbt_f1_dev_intermediate__int_results_unioned
+catalog: dbt_f1
+schema: dev_intermediate
+table_name: int_results_unioned
+
+dimensions:
+  session_type: {}
+  driver_number: {}
+  grid_position: {}
+  finish_position: {}
+  position_text: {}
+  position_order: {}
+  points: {}
+  laps_completed: {}
+  finish_time_display: {}
+  finish_time_milliseconds: {}
+  fastest_lap_number: {}
+  fastest_lap_rank: {}
+  fastest_lap_time: {}
+  fastest_lap_speed_kph: {}
+
+  result_id:
+    format: ID
+
+  race_id:
+    format: ID
+
+  driver_id:
+    format: ID
+
+  constructor_id:
+    format: ID
+
+  status_id:
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count

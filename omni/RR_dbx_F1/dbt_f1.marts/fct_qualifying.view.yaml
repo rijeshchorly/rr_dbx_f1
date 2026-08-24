@@ -1,0 +1,57 @@
+# Reference this view as dbt_f1_marts__fct_qualifying
+#This description was pulled from dbt.
+description: One record per driver per qualifying session.
+
+catalog: dbt_f1
+schema: marts
+table_name: fct_qualifying
+
+dimensions:
+  driver_number: {}
+  qualifying_position: {}
+  q1_time: {}
+  q2_time: {}
+  q3_time: {}
+
+  qualifying_id:
+    format: ID
+    primary_key: true
+
+  race_id:
+    format: ID
+
+  driver_id:
+    format: ID
+
+  constructor_id:
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count
+
+  avg_qualifying_position:
+    sql: ${qualifying_position}
+    aggregate_type: average
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_qualifying
+  target_schema: prod
+  description: One record per driver per qualifying session.
+  config:
+    schema: marts
+    materialized: table
+  code: |-
+    select
+        qualifying_id,
+        race_id,
+        driver_id,
+        constructor_id,
+        driver_number,
+        qualifying_position,
+        q1_time,
+        q2_time,
+        q3_time
+
+    from {{ ref('stg_f1__qualifying') }}

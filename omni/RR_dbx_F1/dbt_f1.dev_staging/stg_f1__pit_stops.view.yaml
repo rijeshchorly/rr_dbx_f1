@@ -1,0 +1,21 @@
+# Reference this view as dbt_f1_dev_staging__stg_f1__pit_stops
+catalog: dbt_f1
+schema: dev_staging
+table_name: stg_f1__pit_stops
+
+dimensions:
+  stop_number: {}
+  lap_number: {}
+  pit_stop_local_time: {}
+  duration_display: {}
+  pit_stop_milliseconds: {}
+
+  race_id:
+    format: ID
+
+  driver_id:
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count

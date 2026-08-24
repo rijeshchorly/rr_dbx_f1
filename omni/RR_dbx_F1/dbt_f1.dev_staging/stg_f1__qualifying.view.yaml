@@ -1,0 +1,27 @@
+# Reference this view as dbt_f1_dev_staging__stg_f1__qualifying
+catalog: dbt_f1
+schema: dev_staging
+table_name: stg_f1__qualifying
+
+dimensions:
+  driver_number: {}
+  qualifying_position: {}
+  q1_time: {}
+  q2_time: {}
+  q3_time: {}
+
+  qualifying_id:
+    format: ID
+
+  race_id:
+    format: ID
+
+  driver_id:
+    format: ID
+
+  constructor_id:
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count

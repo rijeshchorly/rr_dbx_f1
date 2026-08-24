@@ -1,0 +1,41 @@
+- join_from_view: dbt_f1_marts__dim_races
+  join_to_view: dbt_f1_marts__dim_circuits
+  join_type: always_left
+  on_sql: ${dbt_f1_marts__dim_races.circuit_id} =
+    ${dbt_f1_marts__dim_circuits.circuit_id}
+  relationship_type: many_to_one
+  reversible: true
+
+- join_from_view: dbt_f1_marts__fct_race_results
+  join_to_view: dbt_f1_marts__dim_races
+  join_type: always_left
+  on_sql: ${dbt_f1_marts__fct_race_results.race_id} =
+    ${dbt_f1_marts__dim_races.race_id}
+  relationship_type: many_to_one
+  reversible: true
+
+- join_from_view: dbt_f1_marts__fct_race_results
+  join_to_view: dbt_f1_marts__dim_drivers
+  join_type: always_left
+  on_sql: ${dbt_f1_marts__fct_race_results.driver_id} =
+    ${dbt_f1_marts__dim_drivers.driver_id}
+  relationship_type: many_to_one
+  reversible: true
+
+- join_from_view: dbt_f1_marts__fct_race_results
+  join_to_view: dbt_f1_marts__dim_constructors
+  join_type: always_left
+  on_sql: ${dbt_f1_marts__fct_race_results.constructor_id} =
+    ${dbt_f1_marts__dim_constructors.constructor_id}
+  relationship_type: many_to_one
+  reversible: true
+
+- join_from_view: dbt_f1_marts__fct_race_results
+  join_to_view: dbt_f1_marts__fct_qualifying
+  join_type: always_left
+  on_sql: ${dbt_f1_marts__fct_race_results.race_id} =
+    ${dbt_f1_marts__fct_qualifying.race_id} AND
+    ${dbt_f1_marts__fct_race_results.driver_id} =
+    ${dbt_f1_marts__fct_qualifying.driver_id}
+  relationship_type: many_to_one
+  reversible: true

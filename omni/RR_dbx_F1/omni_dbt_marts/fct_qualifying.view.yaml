@@ -1,0 +1,52 @@
+# Reference this view as omni_dbt_marts__fct_qualifying
+schema_label: ""
+#This description was pulled from dbt.
+description: One record per driver per qualifying session.
+
+schema: omni_dbt_marts
+table_name: fct_qualifying
+
+dimensions:
+  driver_number: {}
+  qualifying_position: {}
+  q1_time: {}
+  q2_time: {}
+  q3_time: {}
+
+  qualifying_id:
+    format: ID
+
+  race_id:
+    format: ID
+
+  driver_id:
+    format: ID
+
+  constructor_id:
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_qualifying
+  target_schema: prod
+  description: One record per driver per qualifying session.
+  config:
+    schema: marts
+    materialized: table
+  code: |-
+    select
+        qualifying_id,
+        race_id,
+        driver_id,
+        constructor_id,
+        driver_number,
+        qualifying_position,
+        q1_time,
+        q2_time,
+        q3_time
+
+    from {{ ref('stg_f1__qualifying') }}

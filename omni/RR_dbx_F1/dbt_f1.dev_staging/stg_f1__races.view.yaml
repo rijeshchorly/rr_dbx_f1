@@ -1,0 +1,32 @@
+# Reference this view as dbt_f1_dev_staging__stg_f1__races
+catalog: dbt_f1
+schema: dev_staging
+table_name: stg_f1__races
+
+dimensions:
+  season_year: {}
+  round: {}
+  race_name: {}
+  race_date: {}
+  race_start_time_utc: {}
+  wikipedia_url: {}
+  fp1_date: {}
+  fp1_time_utc: {}
+  fp2_date: {}
+  fp2_time_utc: {}
+  fp3_date: {}
+  fp3_time_utc: {}
+  qualifying_date: {}
+  qualifying_time_utc: {}
+  sprint_date: {}
+  sprint_time_utc: {}
+
+  race_id:
+    format: ID
+
+  circuit_id:
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count

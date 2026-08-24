@@ -1,0 +1,39 @@
+# Reference this view as dbt_f1_marts__dim_constructors
+#This description was pulled from dbt.
+description: One record per constructor.
+
+catalog: dbt_f1
+schema: marts
+table_name: dim_constructors
+
+dimensions:
+  constructor_ref: {}
+  constructor_name: {}
+  nationality: {}
+  wikipedia_url: {}
+
+  constructor_id:
+    format: ID
+    primary_key: true
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: dim_constructors
+  target_schema: prod
+  description: One record per constructor.
+  config:
+    schema: marts
+    materialized: table
+  code: |-
+    select
+        constructor_id,
+        constructor_ref,
+        constructor_name,
+        nationality,
+        wikipedia_url
+
+    from {{ ref('stg_f1__constructors') }}

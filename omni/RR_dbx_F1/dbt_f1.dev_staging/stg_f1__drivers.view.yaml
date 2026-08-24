@@ -1,0 +1,22 @@
+# Reference this view as dbt_f1_dev_staging__stg_f1__drivers
+catalog: dbt_f1
+schema: dev_staging
+table_name: stg_f1__drivers
+
+dimensions:
+  driver_ref: {}
+  driver_number: {}
+  driver_code: {}
+  forename: {}
+  surname: {}
+  full_name: {}
+  date_of_birth: {}
+  nationality: {}
+  wikipedia_url: {}
+
+  driver_id:
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count

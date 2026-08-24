@@ -1,0 +1,28 @@
+# Reference this view as dbt_f1_dev_marts__dim_races
+catalog: dbt_f1
+schema: dev_marts
+table_name: dim_races
+
+dimensions:
+  season_year: {}
+  round: {}
+  race_name: {}
+  race_date: {}
+  race_start_time_utc: {}
+  qualifying_date: {}
+  sprint_date: {}
+  has_sprint_race: {}
+  circuit_name: {}
+  circuit_location: {}
+  circuit_country: {}
+  wikipedia_url: {}
+
+  race_id:
+    format: ID
+
+  circuit_id:
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count

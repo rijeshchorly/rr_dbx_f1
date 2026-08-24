@@ -1,0 +1,41 @@
+# Reference this view as dbt_f1_dev_marts__fct_race_results
+catalog: dbt_f1
+schema: dev_marts
+table_name: fct_race_results
+
+dimensions:
+  race_result_key: {}
+  session_type: {}
+  driver_number: {}
+  grid_position: {}
+  finish_position: {}
+  position_text: {}
+  position_order: {}
+  points: {}
+  laps_completed: {}
+  finish_time_display: {}
+  finish_time_milliseconds: {}
+  fastest_lap_number: {}
+  fastest_lap_rank: {}
+  fastest_lap_time: {}
+  fastest_lap_speed_kph: {}
+  finish_status: {}
+
+  result_id:
+    format: ID
+
+  race_id:
+    format: ID
+
+  driver_id:
+    format: ID
+
+  constructor_id:
+    format: ID
+
+  status_id:
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count

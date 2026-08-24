@@ -1,0 +1,83 @@
+# Reference this view as dbt_f1_staging__stg_f1__sprint_results
+#This description was pulled from dbt.
+description: One record per driver per sprint race (2021 onwards).
+
+catalog: dbt_f1
+schema: staging
+table_name: stg_f1__sprint_results
+
+dimensions:
+  driver_number: {}
+  grid_position: {}
+  finish_position: {}
+  position_text: {}
+  position_order: {}
+  points: {}
+  laps_completed: {}
+  finish_time_display: {}
+  finish_time_milliseconds: {}
+  fastest_lap_number: {}
+  fastest_lap_rank: {}
+  fastest_lap_time: {}
+
+  sprint_result_id:
+    format: ID
+
+  race_id:
+    format: ID
+
+  driver_id:
+    format: ID
+
+  constructor_id:
+    format: ID
+
+  status_id:
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_f1__sprint_results
+  target_schema: prod
+  description: One record per driver per sprint race (2021 onwards).
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    with source as (
+
+        select * from {{ source('f1', 'sprint_results') }}
+
+    ),
+
+    renamed as (
+
+        select
+            resultId as sprint_result_id,
+            raceId as race_id,
+            driverId as driver_id,
+            constructorId as constructor_id,
+            number as driver_number,
+            grid as grid_position,
+            cast({{ ergast_null('position') }} as int) as finish_position,
+            positionText as position_text,
+            positionOrder as position_order,
+            cast(points as double) as points,
+            laps as laps_completed,
+            {{ ergast_null('time') }} as finish_time_display,
+            cast({{ ergast_null('milliseconds') }} as bigint) as finish_time_milliseconds,
+            cast({{ ergast_null('fastestLap') }} as int) as fastest_lap_number,
+            cast({{ ergast_null('rank') }} as int) as fastest_lap_rank,
+            {{ ergast_null('fastestLapTime') }} as fastest_lap_time,
+            cast({{ ergast_null('statusId') }} as bigint) as status_id
+
+        from source
+
+    )
+
+    select * from renamed
+  referenced_by: [ int_results_unioned ]

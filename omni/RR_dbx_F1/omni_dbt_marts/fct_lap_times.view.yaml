@@ -1,0 +1,44 @@
+# Reference this view as omni_dbt_marts__fct_lap_times
+schema_label: ""
+#This description was pulled from dbt.
+description: One record per driver per lap (1996 onwards).
+
+schema: omni_dbt_marts
+table_name: fct_lap_times
+
+dimensions:
+  lap_time_key: {}
+  lap_number: {}
+  track_position: {}
+  lap_time_display: {}
+  lap_time_milliseconds: {}
+
+  race_id:
+    format: ID
+
+  driver_id:
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_lap_times
+  target_schema: prod
+  description: One record per driver per lap (1996 onwards).
+  config:
+    schema: marts
+    materialized: table
+  code: |-
+    select
+        {{ dbt_utils.generate_surrogate_key(['race_id', 'driver_id', 'lap_number']) }} as lap_time_key,
+        race_id,
+        driver_id,
+        lap_number,
+        track_position,
+        lap_time_display,
+        lap_time_milliseconds
+
+    from {{ ref('stg_f1__lap_times') }}

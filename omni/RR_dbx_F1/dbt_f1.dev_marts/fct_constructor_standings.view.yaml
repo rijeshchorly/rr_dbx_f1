@@ -1,0 +1,23 @@
+# Reference this view as dbt_f1_dev_marts__fct_constructor_standings
+catalog: dbt_f1
+schema: dev_marts
+table_name: fct_constructor_standings
+
+dimensions:
+  points: {}
+  standings_position: {}
+  position_text: {}
+  wins: {}
+
+  constructor_standings_id:
+    format: ID
+
+  race_id:
+    format: ID
+
+  constructor_id:
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count

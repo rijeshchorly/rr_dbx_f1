@@ -1,0 +1,112 @@
+# Reference this view as omni_dbt_intermediate__int_results_unioned
+schema_label: ""
+#This description was pulled from dbt.
+description: |
+  Grand Prix and sprint race results unioned into one grain of driver x race x session_type. result_id is only unique within a session_type.
+
+schema: omni_dbt_intermediate
+table_name: int_results_unioned
+
+dimensions:
+  session_type: {}
+  driver_number: {}
+  grid_position: {}
+  finish_position: {}
+  position_text: {}
+  position_order: {}
+  points: {}
+  laps_completed: {}
+  finish_time_display: {}
+  finish_time_milliseconds: {}
+  fastest_lap_number: {}
+  fastest_lap_rank: {}
+  fastest_lap_time: {}
+  fastest_lap_speed_kph: {}
+
+  result_id:
+    format: ID
+
+  race_id:
+    format: ID
+
+  driver_id:
+    format: ID
+
+  constructor_id:
+    format: ID
+
+  status_id:
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: int_results_unioned
+  target_schema: prod
+  description: |
+    Grand Prix and sprint race results unioned into one grain of driver x race x session_type. result_id is only unique within a session_type.
+  config:
+    schema: intermediate
+    materialized: view
+  code: |-
+    with grand_prix_results as (
+
+        select
+            result_id,
+            'race' as session_type,
+            race_id,
+            driver_id,
+            constructor_id,
+            driver_number,
+            grid_position,
+            finish_position,
+            position_text,
+            position_order,
+            points,
+            laps_completed,
+            finish_time_display,
+            finish_time_milliseconds,
+            fastest_lap_number,
+            fastest_lap_rank,
+            fastest_lap_time,
+            fastest_lap_speed_kph,
+            status_id
+
+        from {{ ref('stg_f1__results') }}
+
+    ),
+
+    sprint_results as (
+
+        select
+            sprint_result_id as result_id,
+            'sprint' as session_type,
+            race_id,
+            driver_id,
+            constructor_id,
+            driver_number,
+            grid_position,
+            finish_position,
+            position_text,
+            position_order,
+            points,
+            laps_completed,
+            finish_time_display,
+            finish_time_milliseconds,
+            fastest_lap_number,
+            fastest_lap_rank,
+            fastest_lap_time,
+            cast(null as double) as fastest_lap_speed_kph,
+            status_id
+
+        from {{ ref('stg_f1__sprint_results') }}
+
+    )
+
+    select * from grand_prix_results
+    union all
+    select * from sprint_results
+  referenced_by: [ fct_race_results ]

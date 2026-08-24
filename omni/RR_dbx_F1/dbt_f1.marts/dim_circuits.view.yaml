@@ -1,0 +1,49 @@
+# Reference this view as dbt_f1_marts__dim_circuits
+#This description was pulled from dbt.
+description: One record per circuit.
+
+catalog: dbt_f1
+schema: marts
+table_name: dim_circuits
+
+dimensions:
+  circuit_ref: {}
+  circuit_name: {}
+  location: {}
+  country: {}
+  latitude: {}
+  longitude: {}
+  wikipedia_url: {}
+
+  circuit_id:
+    format: ID
+    primary_key: true
+
+  altitude_metres:
+    label: Altitude (m)
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: dim_circuits
+  target_schema: prod
+  description: One record per circuit.
+  config:
+    schema: marts
+    materialized: table
+  code: |-
+    select
+        circuit_id,
+        circuit_ref,
+        circuit_name,
+        location,
+        country,
+        latitude,
+        longitude,
+        altitude_metres,
+        wikipedia_url
+
+    from {{ ref('stg_f1__circuits') }}

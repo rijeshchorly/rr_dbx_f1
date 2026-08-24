@@ -1,0 +1,22 @@
+# Reference this view as dbt_f1_dev_marts__fct_pit_stops
+catalog: dbt_f1
+schema: dev_marts
+table_name: fct_pit_stops
+
+dimensions:
+  pit_stop_key: {}
+  stop_number: {}
+  lap_number: {}
+  pit_stop_local_time: {}
+  duration_display: {}
+  pit_stop_milliseconds: {}
+
+  race_id:
+    format: ID
+
+  driver_id:
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count

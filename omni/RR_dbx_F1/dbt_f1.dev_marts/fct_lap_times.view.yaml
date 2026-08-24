@@ -1,0 +1,21 @@
+# Reference this view as dbt_f1_dev_marts__fct_lap_times
+catalog: dbt_f1
+schema: dev_marts
+table_name: fct_lap_times
+
+dimensions:
+  lap_time_key: {}
+  lap_number: {}
+  track_position: {}
+  lap_time_display: {}
+  lap_time_milliseconds: {}
+
+  race_id:
+    format: ID
+
+  driver_id:
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count

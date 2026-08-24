@@ -1,0 +1,48 @@
+# Reference this view as dbt_f1_marts__fct_constructor_standings
+#This description was pulled from dbt.
+description: Cumulative constructor championship standings after each race, as
+  published by the source.
+
+catalog: dbt_f1
+schema: marts
+table_name: fct_constructor_standings
+
+dimensions:
+  points: {}
+  standings_position: {}
+  position_text: {}
+  wins: {}
+
+  constructor_standings_id:
+    format: ID
+
+  race_id:
+    format: ID
+
+  constructor_id:
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_constructor_standings
+  target_schema: prod
+  description: Cumulative constructor championship standings after each race, as
+    published by the source.
+  config:
+    schema: marts
+    materialized: table
+  code: |-
+    select
+        constructor_standings_id,
+        race_id,
+        constructor_id,
+        points,
+        standings_position,
+        position_text,
+        wins
+
+    from {{ ref('stg_f1__constructor_standings') }}

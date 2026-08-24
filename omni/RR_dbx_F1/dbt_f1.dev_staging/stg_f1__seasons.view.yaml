@@ -1,0 +1,12 @@
+# Reference this view as dbt_f1_dev_staging__stg_f1__seasons
+catalog: dbt_f1
+schema: dev_staging
+table_name: stg_f1__seasons
+
+dimensions:
+  season_year: {}
+  wikipedia_url: {}
+
+measures:
+  count:
+    aggregate_type: count

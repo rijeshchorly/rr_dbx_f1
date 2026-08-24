@@ -1,0 +1,18 @@
+base_view: dbt_f1_marts__fct_race_results
+label: Race Results
+description: One row per driver per race session result in Formula 1, with race,
+  driver, constructor, circuit, and qualifying context.
+
+joins:
+  dbt_f1_marts__dim_races:
+    dbt_f1_marts__dim_circuits: {}
+  dbt_f1_marts__dim_drivers: {}
+  dbt_f1_marts__dim_constructors: {}
+  dbt_f1_marts__fct_qualifying: {}
+
+ai_context: "Grain: one row per driver per race session result. session_type
+  distinguishes main race results from sprint results, so points, wins, and
+  podiums should normally be analyzed with session context in mind (filter or
+  group by session_type to avoid mixing race and sprint outcomes). grid_position
+  = 0 means the driver started from the pit lane. finish_status values other
+  than 'Finished' indicate a DNF."

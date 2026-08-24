@@ -1,0 +1,67 @@
+# Reference this view as dbt_f1_staging__stg_f1__qualifying
+#This description was pulled from dbt.
+description: One record per driver per qualifying session. q2/q3 times are null
+  for eliminated drivers.
+
+catalog: dbt_f1
+schema: staging
+table_name: stg_f1__qualifying
+
+dimensions:
+  driver_number: {}
+  qualifying_position: {}
+  q1_time: {}
+  q2_time: {}
+  q3_time: {}
+
+  qualifying_id:
+    format: ID
+
+  race_id:
+    format: ID
+
+  driver_id:
+    format: ID
+
+  constructor_id:
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: stg_f1__qualifying
+  target_schema: prod
+  description: One record per driver per qualifying session. q2/q3 times are null
+    for eliminated drivers.
+  config:
+    schema: staging
+    materialized: view
+  code: |-
+    with source as (
+
+        select * from {{ source('f1', 'qualifying') }}
+
+    ),
+
+    renamed as (
+
+        select
+            qualifyId as qualifying_id,
+            raceId as race_id,
+            driverId as driver_id,
+            constructorId as constructor_id,
+            number as driver_number,
+            position as qualifying_position,
+            {{ ergast_null('q1') }} as q1_time,
+            {{ ergast_null('q2') }} as q2_time,
+            {{ ergast_null('q3') }} as q3_time
+
+        from source
+
+    )
+
+    select * from renamed
+  referenced_by: [ fct_qualifying ]

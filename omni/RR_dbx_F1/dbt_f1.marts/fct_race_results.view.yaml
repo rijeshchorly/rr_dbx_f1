@@ -1,0 +1,190 @@
+# Reference this view as dbt_f1_marts__fct_race_results
+#This description was pulled from dbt.
+description: |
+  One record per driver per race session. Grand Prix and sprint results are combined; filter on session_type to analyze either. finish_status gives the human-readable outcome (Finished, +1 Lap, Engine, ...).
+
+catalog: dbt_f1
+schema: marts
+table_name: fct_race_results
+
+dimensions:
+  race_result_key: {}
+  driver_number: {}
+  finish_position: {}
+  position_text: {}
+  laps_completed: {}
+  finish_time_display: {}
+  finish_time_milliseconds: {}
+  fastest_lap_number: {}
+  fastest_lap_rank: {}
+  fastest_lap_time: {}
+
+  result_id:
+    format: ID
+    primary_key: true
+
+  session_type:
+    all_values: [ race, sprint ]
+
+  race_id:
+    format: ID
+
+  driver_id:
+    format: ID
+
+  constructor_id:
+    format: ID
+
+  grid_position:
+    description: Starting position; 0 indicates a pit-lane start
+
+  position_order:
+    description: Sequential ordering of results including non-finishers, used for
+      reliable sorting
+
+  points:
+    description: Championship points awarded for this session result
+
+  fastest_lap_speed_kph:
+    label: Fastest Lap Speed (kph)
+
+  status_id:
+    format: ID
+
+  finish_status:
+    description: Reason a result ended, e.g. Finished, Accident, Engine; anything
+      other than 'Finished' is a DNF
+
+  is_win:
+    sql: ${finish_position} = 1
+
+  is_podium:
+    sql: ${finish_position} <= 3
+
+  did_finish:
+    sql: ${finish_status} = 'Finished'
+
+  pit_lane_start:
+    sql: ${grid_position} = 0
+
+  positions_gained:
+    sql: CASE WHEN ${grid_position} > 0 THEN ${grid_position} - ${finish_position}
+      END
+    description: Positions gained from grid to finish; null for pit-lane starts
+      (grid_position = 0)
+
+measures:
+  count:
+    aggregate_type: count
+
+  total_points:
+    sql: ${points}
+    aggregate_type: sum
+
+  avg_points:
+    sql: ${points}
+    label: Points per Result
+    format: number_2
+    description: Average championship points per session result; filter session_type
+      to keep race and sprint separate
+    aggregate_type: average
+    synonyms: [ points per race, scoring rate ]
+
+  wins:
+    aggregate_type: count
+    filters:
+      finish_position:
+        is: 1
+
+  podiums:
+    aggregate_type: count
+    filters:
+      finish_position:
+        less_than_or_equal_to: 3
+
+  poles:
+    label: Pole Starts
+    aggregate_type: count
+    filters:
+      grid_position:
+        is: 1
+
+  dnf_count:
+    label: DNFs
+    description: Results that did not finish the session
+    aggregate_type: count
+    filters:
+      finish_status:
+        not: Finished
+
+  finish_rate:
+    sql: SUM(CASE WHEN ${finish_status} = 'Finished' THEN 1 ELSE 0 END) /
+      NULLIF(COUNT(*), 0)
+    format: percent_1
+    description: Share of results that finished the session
+
+  avg_finish_position:
+    sql: ${finish_position}
+    aggregate_type: average
+
+  avg_grid_position:
+    sql: ${grid_position}
+    aggregate_type: average
+
+  total_laps:
+    sql: ${laps_completed}
+    aggregate_type: sum
+
+  max_fastest_lap_speed:
+    sql: ${fastest_lap_speed_kph}
+    label: Max Fastest Lap Speed (kph)
+    aggregate_type: max
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_race_results
+  target_schema: prod
+  description: |
+    One record per driver per race session. Grand Prix and sprint results are combined; filter on session_type to analyze either. finish_status gives the human-readable outcome (Finished, +1 Lap, Engine, ...).
+  config:
+    schema: marts
+    materialized: table
+  code: |-
+    with results as (
+
+        select * from {{ ref('int_results_unioned') }}
+
+    ),
+
+    status as (
+
+        select * from {{ ref('stg_f1__status') }}
+
+    )
+
+    select
+        {{ dbt_utils.generate_surrogate_key(['results.session_type', 'results.result_id']) }} as race_result_key,
+        results.result_id,
+        results.session_type,
+        results.race_id,
+        results.driver_id,
+        results.constructor_id,
+        results.driver_number,
+        results.grid_position,
+        results.finish_position,
+        results.position_text,
+        results.position_order,
+        results.points,
+        results.laps_completed,
+        results.finish_time_display,
+        results.finish_time_milliseconds,
+        results.fastest_lap_number,
+        results.fastest_lap_rank,
+        results.fastest_lap_time,
+        results.fastest_lap_speed_kph,
+        results.status_id,
+        status.status as finish_status
+
+    from results
+    left join status
+        on results.status_id = status.status_id

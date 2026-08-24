@@ -1,0 +1,23 @@
+# Reference this view as dbt_f1_dev_marts__fct_driver_standings
+catalog: dbt_f1
+schema: dev_marts
+table_name: fct_driver_standings
+
+dimensions:
+  points: {}
+  standings_position: {}
+  position_text: {}
+  wins: {}
+
+  driver_standings_id:
+    format: ID
+
+  race_id:
+    format: ID
+
+  driver_id:
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count

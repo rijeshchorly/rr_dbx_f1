@@ -1,0 +1,96 @@
+# Reference this view as omni_dbt_marts__fct_race_results
+schema_label: ""
+#This description was pulled from dbt.
+description: |
+  One record per driver per race session. Grand Prix and sprint results are combined; filter on session_type to analyze either. finish_status gives the human-readable outcome (Finished, +1 Lap, Engine, ...).
+
+schema: omni_dbt_marts
+table_name: fct_race_results
+
+dimensions:
+  race_result_key: {}
+  driver_number: {}
+  grid_position: {}
+  finish_position: {}
+  position_text: {}
+  position_order: {}
+  points: {}
+  laps_completed: {}
+  finish_time_display: {}
+  finish_time_milliseconds: {}
+  fastest_lap_number: {}
+  fastest_lap_rank: {}
+  fastest_lap_time: {}
+  fastest_lap_speed_kph: {}
+  finish_status: {}
+
+  result_id:
+    format: ID
+
+  session_type:
+    all_values: [ race, sprint ]
+
+  race_id:
+    format: ID
+
+  driver_id:
+    format: ID
+
+  constructor_id:
+    format: ID
+
+  status_id:
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: fct_race_results
+  target_schema: prod
+  description: |
+    One record per driver per race session. Grand Prix and sprint results are combined; filter on session_type to analyze either. finish_status gives the human-readable outcome (Finished, +1 Lap, Engine, ...).
+  config:
+    schema: marts
+    materialized: table
+  code: |-
+    with results as (
+
+        select * from {{ ref('int_results_unioned') }}
+
+    ),
+
+    status as (
+
+        select * from {{ ref('stg_f1__status') }}
+
+    )
+
+    select
+        {{ dbt_utils.generate_surrogate_key(['results.session_type', 'results.result_id']) }} as race_result_key,
+        results.result_id,
+        results.session_type,
+        results.race_id,
+        results.driver_id,
+        results.constructor_id,
+        results.driver_number,
+        results.grid_position,
+        results.finish_position,
+        results.position_text,
+        results.position_order,
+        results.points,
+        results.laps_completed,
+        results.finish_time_display,
+        results.finish_time_milliseconds,
+        results.fastest_lap_number,
+        results.fastest_lap_rank,
+        results.fastest_lap_time,
+        results.fastest_lap_speed_kph,
+        results.status_id,
+        status.status as finish_status
+
+    from results
+    left join status
+        on results.status_id = status.status_id

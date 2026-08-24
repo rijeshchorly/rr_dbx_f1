@@ -1,0 +1,21 @@
+# Reference this view as dbt_f1_dev_marts__dim_circuits
+catalog: dbt_f1
+schema: dev_marts
+table_name: dim_circuits
+
+dimensions:
+  circuit_ref: {}
+  circuit_name: {}
+  location: {}
+  country: {}
+  latitude: {}
+  longitude: {}
+  altitude_metres: {}
+  wikipedia_url: {}
+
+  circuit_id:
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count

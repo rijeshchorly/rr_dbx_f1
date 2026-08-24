@@ -1,0 +1,22 @@
+# Reference this view as dbt_f1_dev_marts__dim_drivers
+catalog: dbt_f1
+schema: dev_marts
+table_name: dim_drivers
+
+dimensions:
+  driver_ref: {}
+  driver_number: {}
+  driver_code: {}
+  forename: {}
+  surname: {}
+  full_name: {}
+  date_of_birth: {}
+  nationality: {}
+  wikipedia_url: {}
+
+  driver_id:
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count

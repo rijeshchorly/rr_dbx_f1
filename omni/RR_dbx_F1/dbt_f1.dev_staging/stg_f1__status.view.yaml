@@ -1,0 +1,14 @@
+# Reference this view as dbt_f1_dev_staging__stg_f1__status
+catalog: dbt_f1
+schema: dev_staging
+table_name: stg_f1__status
+
+dimensions:
+  status: {}
+
+  status_id:
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count

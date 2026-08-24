@@ -1,0 +1,17 @@
+# Reference this view as dbt_f1_dev_staging__stg_f1__constructors
+catalog: dbt_f1
+schema: dev_staging
+table_name: stg_f1__constructors
+
+dimensions:
+  constructor_ref: {}
+  constructor_name: {}
+  nationality: {}
+  wikipedia_url: {}
+
+  constructor_id:
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count

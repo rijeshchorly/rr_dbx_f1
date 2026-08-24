@@ -1,0 +1,72 @@
+# Reference this view as omni_dbt_marts__dim_races
+schema_label: ""
+#This description was pulled from dbt.
+description: One record per Grand Prix weekend, denormalized with circuit attributes.
+
+schema: omni_dbt_marts
+table_name: dim_races
+
+dimensions:
+  season_year: {}
+  round: {}
+  race_name: {}
+  race_date: {}
+  race_start_time_utc: {}
+  qualifying_date: {}
+  sprint_date: {}
+  has_sprint_race: {}
+  circuit_name: {}
+  circuit_location: {}
+  circuit_country: {}
+  wikipedia_url: {}
+
+  race_id:
+    format: ID
+
+  circuit_id:
+    format: ID
+
+measures:
+  count:
+    aggregate_type: count
+
+#The info below was pulled from your dbt repository and is read-only.
+dbt:
+  name: dim_races
+  target_schema: prod
+  description: One record per Grand Prix weekend, denormalized with circuit attributes.
+  config:
+    schema: marts
+    materialized: table
+  code: |-
+    with races as (
+
+        select * from {{ ref('stg_f1__races') }}
+
+    ),
+
+    circuits as (
+
+        select * from {{ ref('stg_f1__circuits') }}
+
+    )
+
+    select
+        races.race_id,
+        races.season_year,
+        races.round,
+        races.race_name,
+        races.race_date,
+        races.race_start_time_utc,
+        races.qualifying_date,
+        races.sprint_date,
+        races.sprint_date is not null as has_sprint_race,
+        circuits.circuit_id,
+        circuits.circuit_name,
+        circuits.location as circuit_location,
+        circuits.country as circuit_country,
+        races.wikipedia_url
+
+    from races
+    left join circuits
+        on races.circuit_id = circuits.circuit_id
