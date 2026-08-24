@@ -1,10 +1,2 @@
-dynamic_shared_extensions:
-  - user_attribute: rr_f1
-    mappings:
-      rr_dbx_f1:
-        values_for_model: [ rr_dbx_f1 ]
-      paid:
-        values_for_model: [ paid ]
-
 ai_context: |
   This is a test
