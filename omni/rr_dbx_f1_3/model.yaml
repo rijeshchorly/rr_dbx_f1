@@ -1,5 +1,5 @@
 dynamic_shared_extensions:
-  - user_attribute: rr_dbx3
+  - user_attribute: rr_dbx_f1
     mappings:
       paid:
         values_for_model: [ paid ]
